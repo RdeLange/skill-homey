@@ -27,12 +27,14 @@ class Homey:
         whr = re.compile(where, re.I)
         #f = urllib.request.urlopen(self.url + "/json.htm?type=devices&filter=all&used=true")
         f = self.hadapter.getdevices()
+        print(f)
         #response = f.read()
         payload = json.loads(f)
         idx = False
         stype = False
         dlevel = False
         result = None
+
         while i < len(payload['result']):
             if whr.search(payload['result'][i]['Name']) and wht.search(payload['result'][i]['Name']):
                 stype = payload['result'][i]['Type']
@@ -109,20 +111,13 @@ class Homey:
         if result is 1:
             #print("check")
             cmd = self.findcmd(state, action, dlevel)
-            print(cmd)
-            self.hadapter.take_action(cmd,idx)
-           # if cmd:
-           #     try:
-           #         f = urllib.request.urlopen(self.url + "/json.htm?type=command&param=switch" + stype + "&idx=" + str(idx) + "&switchcmd=" + str(cmd))
-           #         response = f.read()
-           #         #LOGGER.debug(str(response))
-           #         return response
-           #     except IOError as e:
-           #         temp = 3
-                    #LOGGER.error(str(e) + ' : ' + str(e.read()))
-        else:
-            temp = 3
-            #LOGGER.debug("no command found")
+            if cmd:
+                print(cmd)
+                self.hadapter.take_action(cmd,idx)
+                result = True
+            else:
+                result = 1
+                #LOGGER.debug("no command found")
         return result
 
     def get(self, what, where):

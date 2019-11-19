@@ -129,6 +129,7 @@ class HomeyAdapter:
 
     def getdevices(self):
         results = []
+        count =1
         for device in self.DEVICES:
             if device[2] == "Light/Switch":
                 if device[3][0] == "true":
@@ -137,20 +138,20 @@ class HomeyAdapter:
                 else:
                     device_status = "Off"
                     device_data = "Off"
-                results.append({ "idx":len(results)+1, "Name": device[1], "Type": device[2] , "Status":device_status, "Level":device[3][1],"Data":device_data })
+                results.append({ "idx":count, "Name": device[1], "Type": device[2] , "Status":device_status, "Level":device[3][1],"Data":device_data })
             elif device[2] =="climate":
                 if device[3][0] !="":
                     results.append(
-                        {"idx": len(results) + 1, "Name": device[1], "Type": "Temperature", "Status": "",
+                        {"idx": count, "Name": device[1], "Type": "Temperature", "Status": "",
                          "Level": "", "Data": device[3][0]})
                 if device[3][1] !="":
                     results.append(
-                        {"idx": len(results) + 1, "Name": device[1], "Type": "Humidity", "Status": "",
+                        {"idx": count, "Name": device[1], "Type": "Humidity", "Status": "",
                          "Level": "", "Data": device[3][1]})
 
             else:
-                results.append({ "idx":len(results)+1, "Name": device[1], "Type": device[2] , "Status":device[3][0], "Level":device[3][1],"Data":device[3][0] })
-
+                results.append({ "idx":count, "Name": device[1], "Type": device[2] , "Status":device[3][0], "Level":device[3][1],"Data":device[3][0] })
+            count=count+1
 
                 #print(results)
         result=json.dumps({'result': results})

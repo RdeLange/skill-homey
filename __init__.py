@@ -26,7 +26,7 @@ import re
 __author__ = 'R. de Lange'
 
 """	This Homey skill is partly ported from the Domoticz Skill by treussart
-	Please find on https://github.com/treussart/homey_skill """
+	Please find on https://github.com/treussart/domoticz_skill """
 
 sys.path.append(abspath(dirname(__file__)))
 LOGGER = getLogger(__name__)
@@ -100,16 +100,18 @@ class HomeySkill(MycroftSkill):
         }
         response = Homey.get(what, where)
         data = str(response['Data'])
+        type = str(response['Type'])
+        data2 = ""
         if data is None:
             if where is None:
                 self.speak_dialog("NotFoundShort", data)
             else:
                 self.speak_dialog("NotFound", data)
-        if re.search('\d\s+C', data):
-            data = data.replace(' C', ' degrees celsius')
-        if re.search('\d\s+F', data):
-            data = data.replace(' F', ' degrees fahrenheit')
-        data = "It's " + data
+        if type == "Temperature" :
+            data2 = "degrees"
+        if type == "Humidity":
+            data2 = "percent"
+        data = "The " + type + "is " + data + " " + data2
         LOGGER.debug("result : " + str(data))
         self.speak(str(data))
 

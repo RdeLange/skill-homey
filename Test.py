@@ -10,9 +10,9 @@ i=0
 while i == 0:
     time.sleep(2)
     #print(do.findnode("light","livingroom"))
-    print(do.findcommand(re.compile('light', re.IGNORECASE), 'dim','60',{'onoff': 'true', 'dim': '70'}))
-    print(do.findcommand(re.compile('light', re.IGNORECASE), 'turn', 'off', {'onoff': 'true', 'dim': '70'}))
-    #print(do.switch("on", "light", "table", "set")) #switch(state,what,where,action)
+    #print(do.findcommand(re.compile('light', re.IGNORECASE), 'dim','60',{'onoff': 'true', 'dim': '70'}))
+    #print(do.findcommand(re.compile('light', re.IGNORECASE), 'turn', 'off', {'onoff': 'true', 'dim': '70'}))
+    print(do.switch("off", "light", "kitchen", "turn")) #switch(state,what,where,action)
     #print(do.hadapter.getdevices())
     #print(do.get("Humidity",""))
     """""

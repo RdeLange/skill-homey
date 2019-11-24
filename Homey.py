@@ -28,7 +28,6 @@ class Homey:
         whr = re.compile(where, re.I)
         result = None
         devices = self.ha.getdevicesjson()
-        print(devices)
         i=0
         while i < len(devices['Devices'][0]['Nodes']):
             if whr.search(devices['Devices'][0]['Nodes'][i]['Name']) and wht.search(devices['Devices'][0]['Nodes'][i]['Name']):
@@ -36,12 +35,8 @@ class Homey:
                 stype = devices['Devices'][0]['Nodes'][i]['Type']
                 typ = re.compile(stype, re.I)
                 sproperties ={}
-                svalue = []
-                #sproperties = {devices['Devices'][0]['Nodes'][i]['Properties'][0]['Ńame']:devices['Devices'][0]['Nodes'][i]['Properties'][0]['Value']}
-
                 for property in devices['Devices'][0]['Nodes'][i]['Properties']:
                     sproperties[property['Name']]=property['Value']
-
                 result = [sname,typ,sproperties]
                 break
             i += 1
@@ -55,7 +50,6 @@ class Homey:
                 dsrdst = "25%"
             rslt = re.compile(dsrdst, re.I)
             rslt2 = re.compile(act, re.I)
-            print(properties["dim"])
             try:
                 dlevel = properties['dim']
             except:
@@ -91,3 +85,25 @@ class Homey:
                 elif rslt.search('unlock') or rslt.search('close') or rslt.search('off'):
                     cmd = ["onoff/set","False"]
             return cmd
+
+    def switch(self, actionstate, what, where, action):
+        """Switch the device in Homey."""
+        result = None
+        data = []
+        data = self.findnode(what, where)
+        nodename = data[0]
+        nodetype = data[1]
+        nodeproperties = data[2]
+        if nodetype == re.compile('light', re.IGNORECASE):
+            targetstate_onoff = ""
+            if actionstate == "on": targetstate_onoff = "true"
+            elif actionstate == "off": targetstate_onoff = "false"
+            if nodeproperties['onoff'] == targetstate_onoff: return 0
+            cmd = self.findcommand(nodetype, action,actionstate,nodeproperties)
+
+
+
+
+
+        return result
+

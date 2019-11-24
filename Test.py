@@ -3,17 +3,18 @@ import sys
 import re
 import time
 
-do = Homey("192.168.178.100","1883","mqtt",False,"rstdelange","pasw0rd")
+do = Homey("192.168.178.100","1883","homie/homey-5d667df592e8eb0c7d3f1022",False,"rstdelange","pasw0rd")
 
 print("sleeping")
 i=0
 while i == 0:
     time.sleep(2)
-    #print(do.findid("light","kitchen", 1))
-    #print(do.findcmd("off", "on", "20"))
+    #print(do.findnode("light","livingroom"))
+    print(do.findcommand(re.compile('light', re.IGNORECASE), 'dim','60',{'onoff': 'true', 'dim': '70'}))
+    print(do.findcommand(re.compile('light', re.IGNORECASE), 'turn', 'off', {'onoff': 'true', 'dim': '70'}))
     #print(do.switch("on", "light", "table", "set")) #switch(state,what,where,action)
     #print(do.hadapter.getdevices())
-    print(do.get("Humidity",""))
+    #print(do.get("Humidity",""))
     """""
     state = "20"
     what = "light"

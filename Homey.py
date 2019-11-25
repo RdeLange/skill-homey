@@ -34,10 +34,11 @@ class Homey:
                 sname = devices['Devices'][0]['Nodes'][i]['Name']
                 stype = devices['Devices'][0]['Nodes'][i]['Type']
                 typ = re.compile(stype, re.I)
+                snode_id = devices['Devices'][0]['Nodes'][i]['Node_id']
                 sproperties ={}
                 for property in devices['Devices'][0]['Nodes'][i]['Properties']:
                     sproperties[property['Name']]=property['Value']
-                result = [sname,typ,sproperties]
+                result = [snode_id,sname,typ,sproperties]
                 break
             i += 1
         return result
@@ -91,15 +92,20 @@ class Homey:
         result = None
         data = []
         data = self.findnode(what, where)
-        nodename = data[0]
-        nodetype = data[1]
-        nodeproperties = data[2]
+        node_id = data[0]
+        nodename = data[1]
+        nodetype = data[2]
+        nodeproperties = data[3]
         if nodetype == re.compile('light', re.IGNORECASE):
             targetstate_onoff = ""
             if actionstate == "on": targetstate_onoff = "true"
             elif actionstate == "off": targetstate_onoff = "false"
             if nodeproperties['onoff'] == targetstate_onoff: return 0
-            cmd = self.findcommand(nodetype, action,actionstate,nodeproperties)
+            cmdparams = self.findcommand(nodetype, action,actionstate,nodeproperties)
+            cmd = [node_id+"/"+cmdparams[0],cmdparams[1]]
+            self.ha.take_action(cmd)
+            return True
+        return 1
 
 
 

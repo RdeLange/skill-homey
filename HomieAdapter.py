@@ -10,6 +10,7 @@ class HomieAdapter:
     DEVICES = []
 
     def __init__(self,host, port,root,authentication,user,password):
+        self.homieroot = root
         self.homiemqtt = HomieMQTT(host,port,root,authentication,user,password)
         #print("sleeping....")
         #time.sleep(10)
@@ -43,13 +44,20 @@ class HomieAdapter:
                     {"Name": prop, "Settable": properties[prop]._settable, "Unit": properties[prop]._unit,
                      "Value": properties[prop]._value, "Datatype": properties[prop]._datatype,
                      "Format": properties[prop]._format})
-            result_nodes.append({"idx": i, "Name": device._nodes[node]._name.replace(u'\xa0', ' '), "Type": ha_type,
+            result_nodes.append({"Node_id": device._nodes[node]._node_id, "Name": device._nodes[node]._name.replace(u'\xa0', ' '), "Type": ha_type,
                                  "Topicbase": device._nodes[node]._topic_base, "Properties": result_properties})
             i = i + 1
         result_devices.append({"Nodes": result_nodes})
         result = {'Devices': result_devices}
         return result
 
+    def take_action(self,cmd):
+        action = cmd[0]
+        payload = cmd[1]
+        root = self.homieroot
+        topic = root+"/"+action
+        self.homiemqtt.mqttc.publish(topic,str(payload))
+        print("topic: "+topic+"=>"+payload)
 
 
 

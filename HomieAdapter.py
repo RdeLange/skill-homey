@@ -58,7 +58,8 @@ class HomieAdapter:
         self.homiemqtt.mqttc.publish(topic,str(payload))
         print("topic: "+topic+"=>"+payload)
 
-
+    def check_mqttconnection(self):
+        return self.homiemqtt.mqttconnected
 
 
 

@@ -99,21 +99,19 @@ class HomeySkill(MycroftSkill):
             'where': where
         }
         response = Homey.get(what, where)
-        data = str(response['Data'])
-        type = str(response['Type'])
-        data2 = ""
-        if data is None:
-            if where is None:
-                self.speak_dialog("NotFoundShort", data)
-            else:
-                self.speak_dialog("NotFound", data)
-        if type == "Temperature" :
-            data2 = "degrees"
-        if type == "Humidity":
-            data2 = "percent"
-        data = "The " + type + "is " + data + " " + data2
-        LOGGER.debug("result : " + str(data))
-        self.speak(str(data))
+        if len(response) == 0:
+            self.speak_dialog("NotFound", data)
+        if len(response) > 0:
+            count = 0
+            for item in response:
+                if count == len(response) and len(response)>1:
+                    sentence = sentence +" and the "+ item[0]+" in the "+where+" is "+ item[1]+ " "+item[2]
+                elif count != len(response) and len(response)>1:
+                    sentence = sentence + " ,the " + item[0] + " in the " + where + " is " + item[1] + " " + item[2]
+                else sentence = sentence + "The " + item[0] + " in the " + where + " is " + item[1] + " " + item[2]
+                count = +1
+        LOGGER.debug("result : " + str(sentence))
+        self.speak(str(sentence))
 
     def stop(self):
         pass

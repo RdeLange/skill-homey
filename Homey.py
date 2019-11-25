@@ -90,8 +90,8 @@ class Homey:
     def switch(self, actionstate, what, where, action):
         """Switch the device in Homey."""
         result = None
-        data = []
         data = self.findnode(what, where)
+        if data == None: return None #node not found
         node_id = data[0]
         nodename = data[1]
         nodetype = data[2]
@@ -100,16 +100,40 @@ class Homey:
             targetstate_onoff = ""
             if actionstate == "on": targetstate_onoff = "true"
             elif actionstate == "off": targetstate_onoff = "false"
-            if nodeproperties['onoff'] == targetstate_onoff: return 0
+            if nodeproperties['onoff'] == targetstate_onoff: return 0 #targetstate is currentstate
             cmdparams = self.findcommand(nodetype, action,actionstate,nodeproperties)
             cmd = [node_id+"/"+cmdparams[0],cmdparams[1]]
+            if cmd == False: return 1#command not valid
             self.ha.take_action(cmd)
-            return True
+            return True #succesfully operated
         return 1
 
+    def get(self, what, where):
+        """Get the device's data in Homey."""
+        result = []
+        devices = self.ha.getdevicesjson()
+        wht = re.compile(what, re.I)
+        whr = re.compile(where, re.I)
+        #TEMPERATURE
+        if wht.search("Temperature"):
+            i=0
+            while i < len(devices['Devices'][0]['Nodes']):
+                if whr.search(devices['Devices'][0]['Nodes'][i]['Name']):
+                    for property in devices['Devices'][0]['Nodes'][i]['Properties']:
+                        if property['Name'] == "measure-temperature":
+                            result.append(["current temperature",property['Value'],"Degrees"])
+                        if property['Name'] == "target-temperature":
+                            result.append(["target temperature", property['Value'], "Degrees"])
+                i += 1
 
-
-
+        #HUMIDITY
+        if wht.search("Humidity"):
+            i=0
+            while i < len(devices['Devices'][0]['Nodes']):
+                if whr.search(devices['Devices'][0]['Nodes'][i]['Name']):
+                    for property in devices['Devices'][0]['Nodes'][i]['Properties']:
+                        if property['Name'] == "measure-humidity":
+                            result.append(["current humidity",property['Value'],"Percent"])
+                i += 1
 
         return result
-

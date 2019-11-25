@@ -12,20 +12,40 @@ while i == 0:
     #print(do.findnode("light","livingroom"))
     #print(do.findcommand(re.compile('light', re.IGNORECASE), 'dim','60',{'onoff': 'true', 'dim': '70'}))
     #print(do.findcommand(re.compile('light', re.IGNORECASE), 'turn', 'off', {'onoff': 'true', 'dim': '70'}))
-    print(do.switch("on", "light", "kitchen", "turn")) #switch(state,what,where,action)
+    #print(do.switch("on", "light", "kitchen", "turn")) #switch(state,what,where,action)
     #print(do.hadapter.getdevices())
-    #print(do.get("Humidity",""))
-    """""
-    state = "20"
+
+    #START GET TEST
+    what = "Humidity"
+    where = "Hallway"
+    response = do.get(what,where)
+    sentence = ""
+    if len(response) == 0:
+        sentence = "Unfortunately I do not know what the current "+what+" in the "+ where +" is."
+    if len(response) > 0:
+        count = 1
+        for item in response:
+            if count ==1: sentence = sentence + "The " + item[0] + " in the " + where + " is " + item[1] + " " + item[2]
+            elif count == len(response) and len(response) > 1:
+                sentence = sentence + " and the " + item[0] + " in the " + where + " is " + item[1] + " " + item[2]
+            elif count != len(response) and len(response) > 1:
+                sentence = sentence + " ,the " + item[0] + " in the " + where + " is " + item[1] + " " + item[2]
+
+            count =count+1
+
+    print(sentence)
+    #END GET TEST
+    '''''
+    state = "on"
     what = "light"
-    where = "livingroom"
-    action = "brighten"
+    where = "kitchen"
+    action = "turn"
     data = {
         'what': what,
         'where': where
     }
-    #response = do.switch(state,what,where,action)
-    
+    response = do.switch(state,what,where,action)
+
     edng = re.compile(str("on").title(), re.I)
     ending = "ed"
     if edng.search('on') or edng.search('off'):
@@ -38,5 +58,5 @@ while i == 0:
         print("The " + str(what) + " can not be operated with command " + str(action).title()+" and value "+str(state).title())
     elif response is True:
         print("I have Succesfully excecuted your "+str(action).title()+" request for the "+str(what).title()+" in the "+str(where).title())
-    """""
+'''''
     i=1

@@ -1,11 +1,10 @@
 from HomieMQTT import HomieMQTT
-import time
 from homie_classes import HomieDevice
 
 class HomieAdapter:
     """ Class for controlling Homie Convention.
         The Homie Convention follows the following format:
-        root/system name/device class (optional)/zone (optional)/device name/capability/command  """
+        root/system name/node/property/command  """
 
     DEVICES = []
 

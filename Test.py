@@ -15,9 +15,13 @@ while i == 0:
     #print(do.switch("on", "light", "kitchen", "turn")) #switch(state,what,where,action)
     #print(do.hadapter.getdevices())
 
+    if not do.ha.check_mqttconnection():
+        print("Connection with broker failed")
+        break
+
     #START GET TEST
     what = "Humidity"
-    where = "Hallway"
+    where = "Livingroom"
     response = do.get(what,where)
     sentence = ""
     if len(response) == 0:

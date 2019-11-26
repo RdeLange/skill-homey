@@ -11,43 +11,49 @@ class HomieMQTT:
     messages = {}
     homey_parent = ""
     homey_device = ""
-    mqttconnected = False
 
     def __init__(self,host, port,root,authentication,user,password):
+        self.mq_host = host
+        self.mq_port = port
+        self.mq_root = root
+        self.mq_authentication = authentication
+        self.mq_user = user
+        self.mq_password = password
+        #self.reconnect(force=True)
+        threading.Thread(target=self.reconnect,args=(True,)).start()
 
-        def on_connect(client, userdata, flags, rc):
-            if rc == 0:
-                client.connected_flag = True  # set flag
-                self.mqttconnected = True
-                #print("connected OK")
-            else:
-                client.connected_flag = False
-                self.mqttconnected = False
-                print("Bad connection Returned code=", rc)
-
-        def on_disconnect(client, userdata, rc):
-            #logging.info("disconnecting reason  " + str(rc))
-            client.connected_flag = False
-            self.mqttconnected = False
-
-        # create flag in class
-        mqtt.Client.connected_flag = False
-        self.mqttconnected = False
-
-        try:
-            self.mqttc = mqtt.Client()
-            self.mqttc.on_connect = on_connect
-            self.mqttc.on_disconnect = on_disconnect
-            if authentication == True:
-                self.mqttc.username_pw_set(username=user, password=password)
-            self.mqttc.on_message = self.on_message
-            print("Homey discovery started.....")
-            self.mqttc.connect(host, int(port), 60)
-            self.mqttc.subscribe(root+"/#", 0)
-            threading.Thread(target=self.startloop).start()
-        except:
+ #       try:
+ #           self.mqttc = mqtt.Client()
+ #           if authentication == True:
+ #               self.mqttc.username_pw_set(username=user, password=password)
+ #           self.mqttc.on_message = self.on_message
+ #           print("Homey discovery started.....")
+ #           self.mqttc.connect(host, int(port), 60)
+ #           self.mqttc.subscribe(root+"/#", 0)
+ #           threading.Thread(target=self.startloop).start()
+ #       except:
             #print("No connection...")
-            temp = 3
+  #          temp = 3
+
+    def reconnect(self, force=False):
+        if force == 1:
+            self.mq_connected = False
+        while not self.mq_connected:
+            try:
+                self.mqttc = mqtt.Client(client_id='Homie Adapter')
+                if self.mq_authentication == True:
+                    self.mqttc.username_pw_set(username=self.mq_user, password=self.mq_password)
+                self.mqttc.on_connect = self.on_connect
+                self.mqttc.on_message = self.on_message
+                self.mqttc.connect(host=self.mq_host,port=int(self.mq_port))
+                threading.Thread(target=self.startloop).start()
+                self.mq_connected = True
+                print("Connected to MQ!")
+            except Exception as ex:
+                print("Could not connect to MQ: {0}".format(ex))
+                print("Trying again in 5 seconds...")
+                time.sleep(5)
+        self.notify()
 
     def startloop(self):
         self.mqttc.loop_forever()
@@ -58,10 +64,16 @@ class HomieMQTT:
         payload = msg.payload.decode("utf-8")
         topic = str(msg.topic)
         temp = topic.split("/")
-        self.homey_parent = temp[0]
-        self.homey_device = temp[1]
+        self.homie_parent = temp[0]
+        self.homie_device = temp[1]
         self.messages[topic] = payload
 
+    def on_connect(self, client, userdata, flags, rc):
+        self.mqttc.subscribe(self.mq_root+"/#", 0)
+
+    def notify(self):
+        #self.reconnect()
+        threading.Thread(target=self.reconnect,args=(False,)).start()
 
     def getmessages(self):
-        return self.messages, self.homey_parent,self.homey_device
+        return self.messages, self.homie_parent,self.homie_device

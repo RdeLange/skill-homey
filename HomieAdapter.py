@@ -59,7 +59,7 @@ class HomieAdapter:
         print("topic: "+topic+"=>"+payload)
 
     def check_mqttconnection(self):
-        return self.homiemqtt.mqttconnected
+        return self.homiemqtt.mq_connected
 
 
 

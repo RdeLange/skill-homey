@@ -1,9 +1,5 @@
 """For controlling Homey."""
-import urllib
-import urllib.request
-import json
 import re
-#from HomeyAdapter import HomeyAdapter
 from HomieAdapter import HomieAdapter
 #from mycroft.util.log import getLogger
 

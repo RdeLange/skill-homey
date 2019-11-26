@@ -16,16 +16,10 @@
                         "value": "127.0.0.1"
                     },
                     {
-                        "name": "protocol",
-                        "type": "checkbox",
-                        "label": "Secured Https",
-                        "value": "false"
-                    },
-                    {
                         "name": "port",
                         "type": "text",
                         "label": "Port",
-                        "value": "80"
+                        "value": "1883"
                     }
                 ]
             },

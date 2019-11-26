@@ -20,7 +20,7 @@ while i == 0:
         break
 
     #START GET TEST
-    what = "Humidity"
+    what = "Temperature"
     where = "Livingroom"
     response = do.get(what,where)
     sentence = ""

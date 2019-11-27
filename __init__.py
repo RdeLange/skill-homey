@@ -77,7 +77,8 @@ class HomeySkill(MycroftSkill):
         ending = "ed"
         if edng.search('on') or edng.search('off'):
             ending = ""
-        if response is None:
+        if response == False: self.speak("Unfortunately Mycroft is currently not having connection with your Homey environment")
+        elif response is None:
             self.speak_dialog("NotFound", data)
         elif response is 0:
             self.speak("The " + str(what) + " is already " + str(state).title() + ending)
@@ -94,10 +95,11 @@ class HomeySkill(MycroftSkill):
             'where': where
         }
         response = self.homey.get(what, where)
-        if len(response) == 0:
-            self.speak_dialog("NotFound", data)
         sentence = ""
-        if len(response) > 0:
+        if response == False: self.speak("Unfortunately Mycroft is currently not having connection with your Homey environment")
+        elif len(response) == 0:
+            self.speak_dialog("NotFound", data)
+        elif len(response) > 0:
             count = 1
             for item in response:
                 if count ==1: sentence = sentence + "The " + item[0] + " in the " + where + " is " + item[1] + " " + item[2]

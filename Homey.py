@@ -85,6 +85,7 @@ class Homey:
 
     def switch(self, actionstate, what, where, action):
         """Switch the device in Homey."""
+        if not self.ha.check_mqttconnection(): return False
         result = None
         data = self.findnode(what, where)
         if data == None: return None #node not found
@@ -106,6 +107,7 @@ class Homey:
 
     def get(self, what, where):
         """Get the device's data in Homey."""
+        if not self.ha.check_mqttconnection(): return False
         result = []
         devices = self.ha.getdevicesjson()
         wht = re.compile(what, re.I)

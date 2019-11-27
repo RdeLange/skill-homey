@@ -49,19 +49,19 @@ class HomeySkill(MycroftSkill):
         homey_infos_intent = IntentBuilder("InfosIntent")\
             .require("InfosKeyword")\
             .require("WhatKeyword")\
-            .optionally("WhereKeyword")\
+            .require("WhereKeyword")\
             .optionally("StateKeyword").build()
         self.register_intent(homey_infos_intent,
                              self.handle_homey_infos_intent)
-
-    def handle_homey_switch_intent(self, message):
-        Homey = Homey(
+        self.homey = Homey(
             self.settings.get("hostname"),
             self.settings.get("port"),
-            self.settings.get("protocol"),
+            self.settings.get("device"),
             self.settings.get("authentication"),
             self.settings.get("username"),
             self.settings.get("password"))
+
+    def handle_homey_switch_intent(self, message):
         state = message.data.get("StateKeyword")
         what = message.data.get("WhatKeyword")
         where = message.data.get("WhereKeyword")
@@ -72,7 +72,7 @@ class HomeySkill(MycroftSkill):
         }
 
         LOGGER.debug("message : " + str(message.data))
-        response = Homey.switch(state, what, where, action)
+        response = self.homey.switch(state, what, where, action)
         edng = re.compile(str(state).title(), re.I)
         ending = "ed"
         if edng.search('on') or edng.search('off'):
@@ -83,33 +83,30 @@ class HomeySkill(MycroftSkill):
             self.speak("The " + str(what) + " is already " + str(state).title() + ending)
         elif response is 1:
             self.speak("The " + str(what) + " can not be operated with " + str(state).title())
+        else:
+            self.speak("Your request has been processed succesfully")
 
     def handle_homey_infos_intent(self, message):
         what = message.data.get("WhatKeyword")
         where = message.data.get("WhereKeyword")
-        Homey = Homey(
-            self.settings.get("hostname"),
-            self.settings.get("port"),
-            self.settings.get("protocol"),
-            self.settings.get("authentication"),
-            self.settings.get("username"),
-            self.settings.get("password"))
         data = {
             'what': what,
             'where': where
         }
-        response = Homey.get(what, where)
+        response = self.homey.get(what, where)
         if len(response) == 0:
             self.speak_dialog("NotFound", data)
+        sentence = ""
         if len(response) > 0:
-            count = 0
+            count = 1
             for item in response:
-                if count == len(response) and len(response)>1:
-                    sentence = sentence +" and the "+ item[0]+" in the "+where+" is "+ item[1]+ " "+item[2]
-                elif count != len(response) and len(response)>1:
+                if count ==1: sentence = sentence + "The " + item[0] + " in the " + where + " is " + item[1] + " " + item[2]
+                elif count == len(response) and len(response) > 1:
+                    sentence = sentence + " and the " + item[0] + " in the " + where + " is " + item[1] + " " + item[2]
+                elif count != len(response) and len(response) > 1:
                     sentence = sentence + " ,the " + item[0] + " in the " + where + " is " + item[1] + " " + item[2]
-                else sentence = sentence + "The " + item[0] + " in the " + where + " is " + item[1] + " " + item[2]
-                count = +1
+
+                count =count+1
         LOGGER.debug("result : " + str(sentence))
         self.speak(str(sentence))
 

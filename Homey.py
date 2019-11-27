@@ -1,6 +1,6 @@
 """For controlling Homey."""
 import re
-from HomieAdapter import HomieAdapter
+from .HomieAdapter import HomieAdapter
 #from mycroft.util.log import getLogger
 
 #LOGGER = getLogger(__name__)

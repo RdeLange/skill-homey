@@ -1,5 +1,8 @@
-from HomieMQTT import HomieMQTT
-from homie_classes import HomieDevice
+from .HomieMQTT import HomieMQTT
+from .homie_classes import HomieDevice
+from mycroft.util.log import getLogger
+
+LOGGER = getLogger(__name__)
 
 class HomieAdapter:
     """ Class for controlling Homie Convention.
@@ -55,8 +58,9 @@ class HomieAdapter:
         payload = cmd[1]
         root = self.homieroot
         topic = root+"/"+action
-        self.homiemqtt.mqttc.publish(topic,str(payload))
-        print("topic: "+topic+"=>"+payload)
+        self.homiemqtt.mqttc.publish(topic,str(payload),1,True)
+        #print("topic: "+topic+"=>"+payload)
+        LOGGER.info("topic: "+topic+"=>"+payload)
 
     def check_mqttconnection(self):
         return self.homiemqtt.mq_connected

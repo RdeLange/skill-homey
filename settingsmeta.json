@@ -1,5 +1,5 @@
 {
-    "name": "Domoticz",
+    "name": "Homey",
     "skillMetadata": {
         "sections": [
             {
@@ -20,7 +20,14 @@
                         "type": "text",
                         "label": "Port",
                         "value": "1883"
+                    },
+                    {
+                        "name": "device",
+                        "type": "text",
+                        "label": "MQTT homie device topic",
+                        "value": "homie/homey-5d667df592e8eb0c7d3f1022"
                     }
+
                 ]
             },
             {

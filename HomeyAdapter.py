@@ -14,7 +14,7 @@ class HomeyAdapter:
             self.mqttc.on_message = self.on_message
             print("Homey discovery started.....")
             self.mqttc.connect(host, int(port), 60)
-            self.mqttc.subscribe("homie/homey-5d667df592e8eb0c7d3f1022/#", 1)
+            self.mqttc.subscribe(root+"/#", 1)
             threading.Thread(target=self.startloop).start()
 
 

@@ -1,1 +1,1 @@
-{"hostname": "192.168.178.100", "Device": "homey-5d667df592e8eb0c7d3f1022", "label1": "null", "__mycroft_skill_firstrun": false, "password": "", "port": "1883", "authorization": false, "username": "","label2": "null"}
+{"hostname": "192.168.178.100", "device": "homie/homey-5d667df592e8eb0c7d3f1022", "label1": "null", "__mycroft_skill_firstrun": false, "password": "", "port": "1883", "authorization": false, "username": "", "label2": "null"}

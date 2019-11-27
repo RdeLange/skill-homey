@@ -9,8 +9,8 @@ class HomieMQTT:
 
     DEVICES = []
     messages = {}
-    homey_parent = ""
-    homey_device = ""
+    homie_parent = ""
+    homie_device = ""
 
     def __init__(self,host, port,root,authentication,user,password):
         self.mq_host = host
@@ -36,7 +36,7 @@ class HomieMQTT:
   #          temp = 3
 
     def reconnect(self, force=False):
-        if force == 1:
+        if force == True:
             self.mq_connected = False
         while not self.mq_connected:
             try:
@@ -76,4 +76,8 @@ class HomieMQTT:
         threading.Thread(target=self.reconnect,args=(False,)).start()
 
     def getmessages(self):
+        print(self.mq_root)
+        temp = self.mq_root.split("/")
+        self.homie_parent = temp[0]
+        self.homie_device = temp[1]
         return self.messages, self.homie_parent,self.homie_device

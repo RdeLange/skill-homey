@@ -1,14 +1,6 @@
 Homey_skill
 ==============
 
-|Licence| |Code Health| |Coverage Status|
-
-+------------------+--------------------+
-| Status           | Operating system   |
-+==================+====================+
-| |Build Status|   | Linux x86\_64      |
-+------------------+--------------------+
-
 This skill is for controlling Homey with the source voice assistant Mycroft.
 
 
@@ -63,10 +55,3 @@ example phrases:
 .. _Homey: https://homey.app/nl-nl/
 
 
-.. |Licence| image:: https://img.shields.io/packagist/l/doctrine/orm.svg
-.. |Code Health| image:: https://landscape.io/github/matleses/domoticz_skill/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/matleses/domoticz_skill/master
-.. |Coverage Status| image:: https://coveralls.io/repos/github/matleses/domoticz_skill/badge.svg?branch=master
-   :target: https://coveralls.io/github/matleses/domoticz_skill?branch=master
-.. |Build Status| image:: https://travis-ci.org/matleses/domoticz_skill.svg?branch=master
-   :target: https://travis-ci.org/matleses/domoticz_skill

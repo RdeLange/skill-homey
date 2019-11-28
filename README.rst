@@ -26,7 +26,7 @@ current stat for the device named "weather" if you ask "what's the weather" rath
 you what the current weather is via the weather skill.
 
 Mycroft Setting for the Homey Skill
------
+-----------------------------------
 
 The default settings for the Homey connection and configuration is the local host without
 authentication.  Please make sure to provide your device Homie mqtt topic. You can find that under the mqtt hub app in the Homey application.

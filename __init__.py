@@ -66,7 +66,7 @@ class HomeySkill(MycroftSkill):
         what = message.data.get("WhatKeyword")
         where = message.data.get("WhereKeyword")
         action = message.data.get("TurnKeyword")
-        if where =="": where = "all"
+        if where ==None: where = "all"
         data = {
             'what': what,
             'where': where

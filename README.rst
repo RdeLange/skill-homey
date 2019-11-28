@@ -1,4 +1,4 @@
-domoticz_skill
+Homey_skill
 ==============
 
 |Licence| |Code Health| |Coverage Status|
@@ -9,22 +9,22 @@ domoticz_skill
 | |Build Status|   | Linux x86\_64      |
 +------------------+--------------------+
 
-This skill is for controlling Domoticz with the source voice assistant Mycroft.
+This skill is for controlling Homey with the source voice assistant Mycroft.
 
 
 Requirements
 ------------
 
 -  `Python3`_.
--  `Domoticz`_.
+-  `Homey`_.
 -  `Mycroft`_.
 
 
 Configuration
 -------------
 
-Name your devices in Domoticz like this: "Where What".  Mycroft will look for the device listed
-in Domoticz. However the skill will also look for "What Where" as well.  Devices can also be
+Name your devices in Homey like this: "Where What".  Mycroft will look for the device listed
+in Homey. However the skill will also look for "What Where" as well.  Devices can also be
 referenced by "What" alone but Mycroft will only fall back to that if it can't find the device
 using "Where What" or "What Where".
 
@@ -33,25 +33,11 @@ with other skills.  For instance naming a device "weather" could cause Mycroft t
 current stat for the device named "weather" if you ask "what's the weather" rather than telling
 you what the current weather is via the weather skill.
 
-
-Domoticz Groups and Scenes
+Mycroft Setting for the Homey Skill
 -----
 
-If you want Mycroft to do things like "turn off all the lights" in Domoticz then make a
-scene or group named "all the lights" with all the lights in it and the skill will find this
-group and operate the whole group rather than an individual object.  One caveat is that you
-want to make the scene name distinct from the individual switch name.  Mycroft is not good
-at picking out the "S" sound at the end of the word.  So a group with items in it called
-Kitchen Light, Counter Light and Stove Light, won't work properly if you call the groups
-name "Kitchen Lights".  Mycroft will trigger on "Kitchen Light" before it triggers on
-"Kitchen Lights".  So if you say "Hey Mycroft turn off the kicthen lights" it will most
-likely only turn off the light named "Kitchen Light".
-
-Mycroft Settings Page
------
-
-The default settings for the domoticz connection and configuration is the local host without
-authentication.  
+The default settings for the Homey connection and configuration is the local host without
+authentication.  Please make sure to provide your device Homie mqtt topic. You can find that under the mqtt hub app in the Homey application.
 
 Usage
 -----
@@ -71,20 +57,10 @@ example phrases:
 -  Hey Mycroft lock the front door
 -  Hey Mycroft dim the dining room dimmer 50%
 
-In French (not yet tested) :
-
--  allume la lumière du salon
--  éteind la lumiere du salon
-
-
-Todo
-----
-
-Use with Tasker on Android for send command voice to Mycroft.
 
 .. _Python3: https://www.python.org/downloads/
-.. _Mycroft: https://mycroft.ai/
-.. _Domoticz: https://domoticz.com/
+.. _Mycroft: https://www.mycroft.ai/
+.. _Homey: https://homey.app/nl-nl/
 
 
 .. |Licence| image:: https://img.shields.io/packagist/l/doctrine/orm.svg

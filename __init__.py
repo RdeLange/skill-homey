@@ -42,7 +42,7 @@ class HomeySkill(MycroftSkill):
             .optionally("TurnKeyword")\
             .require("StateKeyword")\
             .require("WhatKeyword")\
-            .require("WhereKeyword").build()
+            .optionally("WhereKeyword").build()
         self.register_intent(homey_switch_intent,
                              self.handle_homey_switch_intent)
 
@@ -66,6 +66,7 @@ class HomeySkill(MycroftSkill):
         what = message.data.get("WhatKeyword")
         where = message.data.get("WhereKeyword")
         action = message.data.get("TurnKeyword")
+        if where =="": where = "all"
         data = {
             'what': what,
             'where': where

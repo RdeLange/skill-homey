@@ -1,9 +1,9 @@
 """For controlling Homey."""
 import re
 from .HomieAdapter import HomieAdapter
-#from mycroft.util.log import getLogger
+from mycroft.util.log import getLogger
 
-#LOGGER = getLogger(__name__)
+LOGGER = getLogger(__name__)
 
 """	This Homey skill is partly ported from the Domoticz Skill by treussart
 	Please find on https://github.com/treussart/domoticz_skill """

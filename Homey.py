@@ -22,7 +22,7 @@ class Homey:
         #===START===>
         wht = re.compile(what, re.I)
         whr = re.compile(where, re.I)
-        result = None
+        result = []
         devices = self.ha.getdevicesjson()
         i=0
         while i < len(devices['Devices'][0]['Nodes']):
@@ -34,8 +34,29 @@ class Homey:
                 sproperties ={}
                 for property in devices['Devices'][0]['Nodes'][i]['Properties']:
                     sproperties[property['Name']]=property['Value']
-                result = [snode_id,sname,typ,sproperties]
+                result = [[snode_id,sname,typ,sproperties]]
                 break
+            i += 1
+        return result
+
+    def findall(self, what):
+        #input => what = what
+        #output => [nodename, stype, properties] or None if nothing found
+        #===START===>
+        wht = re.compile(what, re.I)
+        result = []
+        devices = self.ha.getdevicesjson()
+        i=0
+        while i < len(devices['Devices'][0]['Nodes']):
+            if wht.search(devices['Devices'][0]['Nodes'][i]['Name']):
+                sname = devices['Devices'][0]['Nodes'][i]['Name']
+                stype = devices['Devices'][0]['Nodes'][i]['Type']
+                typ = re.compile(stype, re.I)
+                snode_id = devices['Devices'][0]['Nodes'][i]['Node_id']
+                sproperties ={}
+                for property in devices['Devices'][0]['Nodes'][i]['Properties']:
+                    sproperties[property['Name']]=property['Value']
+                result.append([snode_id,sname,typ,sproperties])
             i += 1
         return result
 
@@ -87,23 +108,31 @@ class Homey:
         """Switch the device in Homey."""
         if not self.ha.check_mqttconnection(): return False
         result = None
-        data = self.findnode(what, where)
-        if data == None: return None #node not found
-        node_id = data[0]
-        nodename = data[1]
-        nodetype = data[2]
-        nodeproperties = data[3]
-        if nodetype == re.compile('light', re.IGNORECASE):
-            targetstate_onoff = ""
-            if actionstate == "on": targetstate_onoff = "true"
-            elif actionstate == "off": targetstate_onoff = "false"
-            if nodeproperties['onoff'] == targetstate_onoff: return 0 #targetstate is currentstate
-            cmdparams = self.findcommand(nodetype, action,actionstate,nodeproperties)
-            cmd = [node_id+"/"+cmdparams[0],cmdparams[1]]
-            if cmd == False: return 1#command not valid
-            self.ha.take_action(cmd)
-            return True #succesfully operated
-        return 1
+        if where == "all":
+            data = self.findall(what)
+        else:
+            data = self.findnode(what, where)
+        if len(data) == 0: return None #node not found
+        for node in data:
+            result = None
+            node_id = node[0]
+            nodename = node[1]
+            nodetype = node[2]
+            nodeproperties = node[3]
+            if nodetype == re.compile('light', re.IGNORECASE):
+                targetstate_onoff = ""
+                if actionstate == "on": targetstate_onoff = "true"
+                elif actionstate == "off": targetstate_onoff = "false"
+                if nodeproperties['onoff'] == targetstate_onoff: result = 0 #targetstate is currentstate
+                if result == None:
+                    cmdparams = self.findcommand(nodetype, action,actionstate,nodeproperties)
+                    cmd = [node_id+"/"+cmdparams[0],cmdparams[1]]
+                    if cmd == False: result = 1#command not valid
+                    if result == None:
+                        self.ha.take_action(cmd)
+                        result =  True #succesfully operated
+        if where == "all" and result != None : result =3
+        return result
 
     def get(self, what, where):
         """Get the device's data in Homey."""

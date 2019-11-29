@@ -43,6 +43,8 @@ class Homey:
         #input => what = what
         #output => [nodename, stype, properties] or None if nothing found
         #===START===>
+        what = what[:len(what)-1]
+        print(what)
         wht = re.compile(what, re.I)
         result = []
         devices = self.ha.getdevicesjson()
@@ -119,11 +121,13 @@ class Homey:
             nodename = node[1]
             nodetype = node[2]
             nodeproperties = node[3]
+            print(nodetype)
             if nodetype == re.compile('light', re.IGNORECASE):
                 targetstate_onoff = ""
                 if actionstate == "on": targetstate_onoff = "true"
                 elif actionstate == "off": targetstate_onoff = "false"
-                if nodeproperties['onoff'] == targetstate_onoff: result = 0 #targetstate is currentstate
+                if nodeproperties['onoff'] == targetstate_onoff: 
+                    result = 2 #targetstate is currentstate
                 if result == None:
                     cmdparams = self.findcommand(nodetype, action,actionstate,nodeproperties)
                     cmd = [node_id+"/"+cmdparams[0],cmdparams[1]]

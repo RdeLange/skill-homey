@@ -78,15 +78,17 @@ class HomeySkill(MycroftSkill):
         ending = "ed"
         if edng.search('on') or edng.search('off'):
             ending = ""
-        if response == False: self.speak("Unfortunately Mycroft is currently not having connection with your Homey environment")
+        data['stateverb'] = str(state).title()+ending
+        data['state'] = str(state).title()
+        if response == False: self.speak_dialog("NoConnection",data)
         elif response is None:
             self.speak_dialog("NotFound", data)
-        elif response is 0:
-            self.speak("The " + str(what) + " is already " + str(state).title() + ending)
+        elif response is 2:
+            self.speak_dialog("AlreadyTarget", data)
         elif response is 1:
-            self.speak("The " + str(what) + " can not be operated with " + str(state).title())
+            self.speak_dialog("OpsError", data)
         else:
-            self.speak("Your request has been processed succesfully")
+            self.speak_dialog("OpsSuccess", data)
 
     def handle_homey_infos_intent(self, message):
         what = message.data.get("WhatKeyword")
@@ -97,21 +99,25 @@ class HomeySkill(MycroftSkill):
         }
         response = self.homey.get(what, where)
         sentence = ""
-        if response == False: self.speak("Unfortunately Mycroft is currently not having connection with your Homey environment")
+        if response == False: self.speak_dialog("NoConnection",data)
         elif len(response) == 0:
             self.speak_dialog("NotFound", data)
         elif len(response) > 0:
             count = 1
             for item in response:
-                if count ==1: sentence = sentence + "The " + item[0] + " in the " + where + " is " + item[1] + " " + item[2]
+                d = data
+                d['measurement'] = item[0]
+                d['value'] = item[1]
+                d['unit'] = item[2]
+                if count ==1: self.speak_dialog("SensorRead1",d)
                 elif count == len(response) and len(response) > 1:
-                    sentence = sentence + " and the " + item[0] + " in the " + where + " is " + item[1] + " " + item[2]
+                    sentence = self.speak_dialog("SensorRead2",d)
                 elif count != len(response) and len(response) > 1:
-                    sentence = sentence + " ,the " + item[0] + " in the " + where + " is " + item[1] + " " + item[2]
+                    self.speak_dialog("SensorRead3",d)
 
                 count =count+1
-        LOGGER.debug("result : " + str(sentence))
-        self.speak(str(sentence))
+        #LOGGER.debug("result : " + str(sentence))
+        #self.speak(str(sentence))
 
     def stop(self):
         pass

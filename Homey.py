@@ -1,9 +1,9 @@
 """For controlling Homey."""
 import re
 from .HomieAdapter import HomieAdapter
-from mycroft.util.log import getLogger
+#from mycroft.util.log import getLogger
 
-LOGGER = getLogger(__name__)
+#LOGGER = getLogger(__name__)
 
 """	This Homey skill is partly ported from the Domoticz Skill by treussart
 	Please find on https://github.com/treussart/domoticz_skill """
@@ -63,6 +63,53 @@ class Homey:
         return result
 
     def findcommand(self, type, action, actionamount,properties):
+
+        if type == re.compile('thermostat', re.IGNORECASE):
+            dsrdst = str(actionamount).title()
+            print(dsrdst)
+            act = str(action).title()
+            if dsrdst == "None":
+                dsrdst = "0"
+            rslt = re.compile(dsrdst, re.I)
+            rslt2 = re.compile(act, re.I)
+            try:
+                temperature = properties['target-temperature'] #validate if correct => expect error
+            except:
+                temperature = 16
+            print(temperature)
+            if dsrdst.find('Degrees') > -1:
+                dsrdst = int(dsrdst[0:2])
+            elif dsrdst.find('Degree') > -1:
+                dsrdst = int(dsrdst[0:2])
+            else:
+                dsrdst = 0
+            cmd = False
+            if rslt2.search('lower') or rslt2.search('decrease'):
+                stlvl = int(temperature) - int(dsrdst)
+                if stlvl < 16:
+                    stlvl = 16
+                cmd = ["target-temperature/set", str(stlvl)]
+            elif rslt2.search('higher') or rslt2.search('increase'):
+                stlvl = int(temperature) + int(dsrdst)
+                if stlvl > 25:
+                    stlvl = 25
+                cmd = ["target-temperature/set" , str(stlvl)]
+            elif rslt2.search('set'):
+                stlvl = int(dsrdst)
+                if stlvl > 25:
+                    stlvl = 25
+                elif stlvl < 16:
+                    stlvl = 16
+                cmd = ["target-temperature/set" , str(stlvl)]
+            else:
+                stlvl = int(dsrdst)
+                if stlvl > 25:
+                    stlvl = 25
+                elif stlvl < 16:
+                    stlvl = 16
+                cmd = ["target-temperature/set" , str(stlvl)]
+            return cmd   
+
         if type == re.compile('light', re.IGNORECASE):
             dsrdst = str(actionamount).title()
             act = str(action).title()
@@ -110,6 +157,7 @@ class Homey:
         """Switch the device in Homey."""
         if not self.ha.check_mqttconnection(): return False
         result = None
+        if what == "temperature": what = "thermostat"
         if where == "all":
             data = self.findall(what)
         else:
@@ -135,6 +183,23 @@ class Homey:
                     if result == None:
                         self.ha.take_action(cmd)
                         result =  True #succesfully operated
+            if nodetype == re.compile('thermostat', re.IGNORECASE):
+            #    targetstate_temp = '16'
+            #    if nodeproperties['target-temperature'] == targetstate_temp:
+            #        result = 2 #targetstate is currentstate
+                if result == None:
+                    cmdparams = self.findcommand(nodetype, action,actionstate,nodeproperties)
+                    if cmdparams == False: result = 1  # command not valid
+                    if result == None:
+                        if nodeproperties['target-temperature'] == cmdparams[1]:
+                            result = 2 #targetstate is currentstate
+                        if result == None:
+                            cmd = [node_id+"/"+cmdparams[0],cmdparams[1]]
+                            self.ha.take_action(cmd)
+                            result =  True #succesfully operated
+
+
+
         if where == "all" and result != None : result =3
         return result
 

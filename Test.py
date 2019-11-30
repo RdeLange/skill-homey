@@ -43,10 +43,10 @@ while i == 0:
         #END GET TEST
 
     if test ==2:
-        state = "on"
-        what = "light"
-        where = ""
-        action = "turn"
+        state = "3 degrees"
+        what = "temperature"
+        where = "livingroom"
+        action = "decrease"
         if where == "" : where = "all"
         data = {
             'what': what,
@@ -60,7 +60,7 @@ while i == 0:
             ending = ""
         if response is None:
             print("NotFound", data)
-        elif response is 0:
+        elif response is 2:
             print("The " + str(what) + " is already " + str(state).title() + ending)
         elif response is 1:
             print("The " + str(what) + " can not be operated with command " + str(action).title()+" and value "+str(state).title())

@@ -71,7 +71,7 @@ class HomeySkill(MycroftSkill):
             'what': what,
             'where': where
         }
-        where.translate(None, " \n\t\r")
+        where = where.replace(" ","")
         print(where)
         LOGGER.debug("message : " + str(message.data))
         response = self.homey.switch(state, what, where, action)
@@ -98,7 +98,7 @@ class HomeySkill(MycroftSkill):
             'what': what,
             'where': where
         }
-        where.translate(None, " \n\t\r")
+        where = where.replace(" ","")
         print(where)
         response = self.homey.get(what, where)
         sentence = ""

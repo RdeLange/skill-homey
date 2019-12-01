@@ -71,7 +71,7 @@ class HomeySkill(MycroftSkill):
             'what': what,
             'where': where
         }
-
+        where.replace(" ","")
         LOGGER.debug("message : " + str(message.data))
         response = self.homey.switch(state, what, where, action)
         edng = re.compile(str(state).title(), re.I)
@@ -97,6 +97,7 @@ class HomeySkill(MycroftSkill):
             'what': what,
             'where': where
         }
+        where.replace(" ", "")
         response = self.homey.get(what, where)
         sentence = ""
         if response == False: self.speak_dialog("NoConnection",data)

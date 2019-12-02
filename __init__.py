@@ -72,6 +72,7 @@ class HomeySkill(MycroftSkill):
             'where': where
         }
         where = where.replace(" ","")
+        print(where)
         LOGGER.debug("message : " + str(message.data))
         response = self.homey.switch(state, what, where, action)
         edng = re.compile(str(state).title(), re.I)
@@ -98,29 +99,25 @@ class HomeySkill(MycroftSkill):
             'where': where
         }
         where = where.replace(" ","")
+        print(where)
         response = self.homey.get(what, where)
         sentence = ""
         if response == False: self.speak_dialog("NoConnection",data)
         elif len(response) == 0:
             self.speak_dialog("NotFound", data)
         elif len(response) > 0:
-            count = 0
-            keywords=""
-            for item in response:
-                if not keywords.search(item[0].replace(" ","")):
-                    d[count] = data
-                    d[count]['measurement'] = item[0]
-                    d[count]['value'] = item[1]
-                    d[count]['unit'] = item[2]
-                    count = count+1
-                    keywords = keyword+item[0].replace(" ","")+" "
             count = 1
-            for item_d in d:
-                if count ==1: self.speak_dialog("SensorRead1",item_d)
+            for item in response:
+                d = data
+                d['measurement'] = item[0]
+                d['value'] = item[1]
+                d['unit'] = item[2]
+                if count ==1: self.speak_dialog("SensorRead1",d)
                 elif count == len(response) and len(response) > 1:
-                    self.speak_dialog("SensorRead2",item_d)
+                    sentence = self.speak_dialog("SensorRead2",d)
                 elif count != len(response) and len(response) > 1:
-                    self.speak_dialog("SensorRead3",item_d)
+                    self.speak_dialog("SensorRead3",d)
+
                 count =count+1
         #LOGGER.debug("result : " + str(sentence))
         #self.speak(str(sentence))

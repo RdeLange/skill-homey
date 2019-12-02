@@ -66,7 +66,6 @@ class Homey:
 
         if type == re.compile('thermostat', re.IGNORECASE):
             dsrdst = str(actionamount).title()
-            print(dsrdst)
             act = str(action).title()
             if dsrdst == "None":
                 dsrdst = "0"
@@ -76,7 +75,6 @@ class Homey:
                 temperature = properties['target-temperature'] #validate if correct => expect error
             except:
                 temperature = 16
-            print(temperature)
             if dsrdst.find('Degrees') > -1:
                 dsrdst = int(dsrdst[0:2])
             elif dsrdst.find('Degree') > -1:

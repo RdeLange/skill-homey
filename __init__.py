@@ -99,24 +99,38 @@ class HomeySkill(MycroftSkill):
             'where': where
         }
         where = where.replace(" ","")
-        print(where)
         response = self.homey.get(what, where)
         sentence = ""
         if response == False: self.speak_dialog("NoConnection",data)
         elif len(response) == 0:
             self.speak_dialog("NotFound", data)
         elif len(response) > 0:
-            count = 1
+            dd = []
+            keywords = ""
             for item in response:
-                d = data
-                d['measurement'] = item[0]
-                d['value'] = item[1]
-                d['unit'] = item[2]
-                if count ==1: self.speak_dialog("SensorRead1",d)
-                elif count == len(response) and len(response) > 1:
-                    sentence = self.speak_dialog("SensorRead2",d)
-                elif count != len(response) and len(response) > 1:
-                    self.speak_dialog("SensorRead3",d)
+                if not re.search(item[0].replace(" ",""),keywords):
+                    d = []
+                    d.append(data['where'])
+                    d.append(data['what'])
+                    d.append(item[0])
+                    d.append(item[1])
+                    d.append(item[2])
+                    dd.append(d)
+                    keywords = keywords+item[0].replace(" ","")+" "
+            count = 1
+            for item_d in dd:
+                sentencedata = {}
+                sentencedata.clear()
+                sentencedata['where'] = item_d[0]
+                sentencedata['what'] = item_d[1]
+                sentencedata['measurement'] = item_d[2]
+                sentencedata['value'] = item_d[3]
+                sentencedata['unit'] = item_d[4]
+                if count ==1: self.speak_dialog("SensorRead1",sentencedata)
+                elif count == len(dd) and len(dd) > 1:
+                    self.speak_dialog("SensorRead2",sentencedata)
+                elif count != len(dd) and len(dd) > 1:
+                    self.speak_dialog("SensorRead3",sentencedata)
 
                 count =count+1
         #LOGGER.debug("result : " + str(sentence))

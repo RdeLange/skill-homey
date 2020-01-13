@@ -12,8 +12,9 @@ class Homey:
     """Class for controlling Homey."""
 
 
-    def __init__(self, host, port, root, authentication, user, password):
+    def __init__(self, host, port, root, authentication, user, password,language):
         """Recover settings for accessing to Homey Homie MQTT que."""
+        self.lang = language
         self.ha = HomieAdapter(host, port,root,authentication,user,password)
 
     def findnode(self, what, where):
@@ -63,6 +64,38 @@ class Homey:
         return result
 
     def findcommand(self, type, action, actionamount,properties):
+        degreesnoun = 'Degrees'
+        degreenoun = 'Degree'
+        lowernoun = 'lower'
+        decreasenoun = 'decrease'
+        highernoun = 'higher'
+        increasenoun = 'increase'
+        setnoun = 'set'
+        dimnoun = 'dim'
+        brightennoun = 'brighten'
+        locknoun = 'lock'
+        opennoun = 'open'
+        onnoun = 'on'
+        unlocknoun = 'unlock'
+        closenoun = 'close'
+        offnoun = 'off'
+
+        if self.lang == 'nl':
+            degreesnoun = 'Graden'
+            degreenoun = 'Graad'
+            lowernoun = 'verminder'
+            decreasenoun = 'verlaag'
+            highernoun = 'verhoog'
+            increasenoun = 'verhoog'
+            setnoun = 'zet'
+            dimnoun = 'dim'
+            brightennoun = 'verhoog'
+            locknoun = 'vergrendel'
+            opennoun = 'open'
+            onnoun = 'aan'
+            unlocknoun = 'ontgrendel'
+            closenoun = 'dicht'
+            offnoun = 'uit'
 
         if type == re.compile('thermostat', re.IGNORECASE):
             dsrdst = str(actionamount).title()
@@ -77,24 +110,25 @@ class Homey:
             except:
                 temperature = 16
             print(temperature)
-            if dsrdst.find('Degrees') > -1:
+
+            if dsrdst.find(degreesnoun) > -1:
                 dsrdst = int(dsrdst[0:2])
-            elif dsrdst.find('Degree') > -1:
+            elif dsrdst.find(degreenoun) > -1:
                 dsrdst = int(dsrdst[0:2])
             else:
                 dsrdst = 0
             cmd = False
-            if rslt2.search('lower') or rslt2.search('decrease'):
+            if rslt2.search(lowernoun) or rslt2.search(decreasenoun):
                 stlvl = int(temperature) - int(dsrdst)
                 if stlvl < 16:
                     stlvl = 16
                 cmd = ["target-temperature/set", str(stlvl)]
-            elif rslt2.search('higher') or rslt2.search('increase'):
+            elif rslt2.search(highernoun) or rslt2.search(increasenoun):
                 stlvl = int(temperature) + int(dsrdst)
                 if stlvl > 25:
                     stlvl = 25
                 cmd = ["target-temperature/set" , str(stlvl)]
-            elif rslt2.search('set'):
+            elif rslt2.search(setnoun):
                 stlvl = int(dsrdst)
                 if stlvl > 25:
                     stlvl = 25
@@ -129,17 +163,17 @@ class Homey:
                 else:
                     dsrdst = 5
             cmd = False
-            if rslt2.search('dim') or rslt2.search('decrease'):
+            if rslt2.search(dimnoun) or rslt2.search(decreasenoun):
                 stlvl = int(dlevel) - int(dsrdst)
                 if stlvl < 0:
                     stlvl = 0
                 cmd = ["dim/set", str(stlvl)]
-            elif rslt2.search('brighten') or rslt2.search('increase'):
+            elif rslt2.search(brightennoun) or rslt2.search(increasenoun):
                 stlvl = int(dlevel) + int(dsrdst)
                 if stlvl > 100:
                     stlvl = 100
                 cmd = ["dim/set" , str(stlvl)]
-            elif rslt2.search('set'):
+            elif rslt2.search(setnoun):
                 stlvl = int(dsrdst)
                 if stlvl > 100:
                     stlvl = 100
@@ -147,9 +181,9 @@ class Homey:
                     stlvl = 0
                 cmd = ["dim/set" , str(stlvl)]
             else:
-                if rslt.search('lock') or rslt.search('open') or rslt.search('on'):
+                if rslt.search(locknoun) or rslt.search(opennoun) or rslt.search(onnoun):
                     cmd = ["onoff/set","True"]
-                elif rslt.search('unlock') or rslt.search('close') or rslt.search('off'):
+                elif rslt.search(unlocknoun) or rslt.search(closenoun) or rslt.search(offnoun):
                     cmd = ["onoff/set","False"]
             return cmd
 
@@ -157,8 +191,19 @@ class Homey:
         """Switch the device in Homey."""
         if not self.ha.check_mqttconnection(): return False
         result = None
-        if what == "temperature": what = "thermostat"
-        if where == "all":
+        temperaturenoun = 'temperature'
+        allnoun = 'all'
+        onnoun = 'on'
+        offnoun = 'off'
+
+        if self.lang == 'nl':
+            temperaturenoun = 'temperatuur'
+            allnoun = 'alle'
+            onnoun = 'aan'
+            offnoun = 'uit'
+
+        if what == temperaturenoun: what = "thermostat"
+        if where == allnoun:
             data = self.findall(what)
         else:
             data = self.findnode(what, where)
@@ -172,8 +217,8 @@ class Homey:
             print(nodetype)
             if nodetype == re.compile('light', re.IGNORECASE):
                 targetstate_onoff = ""
-                if actionstate == "on": targetstate_onoff = "true"
-                elif actionstate == "off": targetstate_onoff = "false"
+                if actionstate == onnoun: targetstate_onoff = "true"
+                elif actionstate == offnoun: targetstate_onoff = "false"
                 if nodeproperties['onoff'] == targetstate_onoff: 
                     result = 2 #targetstate is currentstate
                 if result == None:
@@ -200,7 +245,7 @@ class Homey:
 
 
 
-        if where == "all" and result != None : result =3
+        if where == allnoun and result != None : result =3
         return result
 
     def get(self, what, where):
@@ -210,26 +255,35 @@ class Homey:
         devices = self.ha.getdevicesjson()
         wht = re.compile(what, re.I)
         whr = re.compile(where, re.I)
+        temperaturenoun = 'Temperature'
+        humiditynoun = 'Humidity'
+        degreesnoun = 'Degrees'
+        percentnoun = 'Percent'
+        if self.lang == 'nl':
+            temperaturenoun = 'Temperatuur'
+            humiditynoun = 'Luchtvochtigheid'
+            degreesnoun = 'Graden'
+            percentnoun = 'Procent'
         #TEMPERATURE
-        if wht.search("Temperature"):
+        if wht.search(temperaturenoun):
             i=0
             while i < len(devices['Devices'][0]['Nodes']):
                 if whr.search(devices['Devices'][0]['Nodes'][i]['Name']):
                     for property in devices['Devices'][0]['Nodes'][i]['Properties']:
                         if property['Name'] == "measure-temperature":
-                            result.append(["current temperature",property['Value'],"Degrees"])
+                            result.append(["current temperature",property['Value'],degreesnoun])
                         if property['Name'] == "target-temperature":
-                            result.append(["target temperature", property['Value'], "Degrees"])
+                            result.append(["target temperature", property['Value'], degreesnoun])
                 i += 1
 
         #HUMIDITY
-        if wht.search("Humidity"):
+        if wht.search(humiditynoun):
             i=0
             while i < len(devices['Devices'][0]['Nodes']):
                 if whr.search(devices['Devices'][0]['Nodes'][i]['Name']):
                     for property in devices['Devices'][0]['Nodes'][i]['Properties']:
                         if property['Name'] == "measure-humidity":
-                            result.append(["current humidity",property['Value'],"Percent"])
+                            result.append(["current humidity",property['Value'],percentnoun])
                 i += 1
 
         return result

@@ -36,10 +36,11 @@ class HomeySkill(MycroftSkill):
 
     def __init__(self):
         super(HomeySkill, self).__init__(name="HomeySkill")
+        self.lang = ''
 
     def initialize(self):
-        #self.lang = self.config_core.get('lang')
-        self.lang = 'nl'
+        self.lang = self.config_core.get('lang')
+
         homey_switch_intent = IntentBuilder("SwitchIntent")\
             .optionally("TurnKeyword")\
             .require("StateKeyword")\

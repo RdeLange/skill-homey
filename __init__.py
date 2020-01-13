@@ -63,7 +63,7 @@ class HomeySkill(MycroftSkill):
             self.settings.get("authentication"),
             self.settings.get("username"),
             self.settings.get("password"),
-            self.lang)
+            self.lang1)
 
     def handle_homey_switch_intent(self, message):
         state = message.data.get("StateKeyword")

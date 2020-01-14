@@ -196,7 +196,7 @@ class Homey:
         onnoun = 'on'
         offnoun = 'off'
 
-        if self.lang == 'nl-nl
+        if self.lang == 'nl-nl'
             temperaturenoun = 'temperatuur'
             allnoun = 'alle'
             onnoun = 'aan'

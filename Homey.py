@@ -80,7 +80,7 @@ class Homey:
         closenoun = 'close'
         offnoun = 'off'
 
-        if self.lang == 'nl':
+        if self.lang == 'nl-nl':
             degreesnoun = 'Graden'
             degreenoun = 'Graad'
             lowernoun = 'verminder'
@@ -196,7 +196,7 @@ class Homey:
         onnoun = 'on'
         offnoun = 'off'
 
-        if self.lang == 'nl':
+        if self.lang == 'nl-nl
             temperaturenoun = 'temperatuur'
             allnoun = 'alle'
             onnoun = 'aan'
@@ -259,7 +259,7 @@ class Homey:
         humiditynoun = 'Humidity'
         degreesnoun = 'Degrees'
         percentnoun = 'Percent'
-        if self.lang == 'nl':
+        if self.lang == 'nl-nl':
             temperaturenoun = 'Temperatuur'
             humiditynoun = 'Luchtvochtigheid'
             degreesnoun = 'Graden'

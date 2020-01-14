@@ -174,12 +174,13 @@ class Homey:
                     stlvl = 100
                 cmd = ["dim/set" , str(stlvl)]
             elif rslt2.search(setnoun):
-                stlvl = int(dsrdst)
-                if stlvl > 100:
-                    stlvl = 100
-                elif stlvl < 0:
-                    stlvl = 0
-                cmd = ["dim/set" , str(stlvl)]
+                try
+                    stlvl = int(dsrdst)
+                    if stlvl > 100:
+                        stlvl = 100
+                    elif stlvl < 0:
+                        stlvl = 0
+                    cmd = ["dim/set" , str(stlvl)]
             else:
                 if rslt.search(locknoun) or rslt.search(opennoun) or rslt.search(onnoun):
                     cmd = ["onoff/set","True"]

@@ -80,6 +80,8 @@ class Homey:
         unlocknoun = 'unlock'
         closenoun = 'close'
         offnoun = 'off'
+        thermostatnoun = 'thermostat'
+        lightnoun = 'light'
 
         if self.lang == 'nl-nl':
             degreesnoun = 'Graden'
@@ -97,8 +99,9 @@ class Homey:
             unlocknoun = 'ontgrendel'
             closenoun = 'dicht'
             offnoun = 'uit'
-
-        if type == re.compile('thermostat', re.IGNORECASE):
+            termstatnoun = 'termostaat'
+            lightnoun ='licht'
+        if type == re.compile(thermostatnoun, re.IGNORECASE):
             dsrdst = str(actionamount).title()
             print(dsrdst)
             act = str(action).title()
@@ -145,7 +148,7 @@ class Homey:
                 cmd = ["target-temperature/set" , str(stlvl)]
             return cmd   
 
-        if type == re.compile('light', re.IGNORECASE):
+        if type == re.compile(lightnoun, re.IGNORECASE):
             dsrdst = str(actionamount).title()
             act = str(action).title()
             if dsrdst == "None":
@@ -202,6 +205,8 @@ class Homey:
         allnoun = 'all'
         onnoun = 'on'
         offnoun = 'off'
+        thermostatnoun = 'thermostat'
+        lightnoun = 'light'
 
         if self.lang == 'nl-nl':
             temperaturenoun = 'temperatuur'
@@ -209,8 +214,10 @@ class Homey:
             allnoun = 'alle'
             onnoun = 'aan'
             offnoun = 'uit'
+            thermostatnoun = 'termostaat'
+            lightnoun = 'licht'
         print(what,temperaturenoun,temperaturenoun2)
-        if what == temperaturenoun or temperaturenoun2: what = "thermostat"
+        if what == temperaturenoun or temperaturenoun2: what = thermostatnoun
         print(what,where)
         if where == allnoun:
             data = self.findall(what)
@@ -225,7 +232,7 @@ class Homey:
             nodetype = node[2]
             nodeproperties = node[3]
             print(nodetype)
-            if nodetype == re.compile('light', re.IGNORECASE):
+            if nodetype == re.compile(lightnoun, re.IGNORECASE):
                 targetstate_onoff = ""
                 if actionstate == onnoun: targetstate_onoff = "true"
                 elif actionstate == offnoun: targetstate_onoff = "false"
@@ -238,7 +245,7 @@ class Homey:
                     if result == None:
                         self.ha.take_action(cmd)
                         result =  True #succesfully operated
-            if nodetype == re.compile('thermostat', re.IGNORECASE):
+            if nodetype == re.compile(thermostatnoun, re.IGNORECASE):
             #    targetstate_temp = '16'
             #    if nodeproperties['target-temperature'] == targetstate_temp:
             #        result = 2 #targetstate is currentstate

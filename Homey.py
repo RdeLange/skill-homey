@@ -218,7 +218,7 @@ class Homey:
             thermostatnoun = 'thermostat'
             lightnoun = 'light'
         print(what,temperaturenoun,temperaturenoun2)
-        if what == temperaturenoun or temperaturenoun2: what = thermostatnoun
+        if what == temperaturenoun or what == temperaturenoun2: what = thermostatnoun
         print(what,where)
         if where == allnoun:
             data = self.findall(what)

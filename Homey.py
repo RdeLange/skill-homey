@@ -99,8 +99,8 @@ class Homey:
             unlocknoun = 'ontgrendel'
             closenoun = 'dicht'
             offnoun = 'uit'
-            termstatnoun = 'termostaat'
-            lightnoun ='licht'
+            thermostatnoun = 'thermostat'
+            lightnoun ='light'
         if type == re.compile(thermostatnoun, re.IGNORECASE):
             dsrdst = str(actionamount).title()
             print(dsrdst)
@@ -214,8 +214,8 @@ class Homey:
             allnoun = 'alle'
             onnoun = 'aan'
             offnoun = 'uit'
-            thermostatnoun = 'termostaat'
-            lightnoun = 'licht'
+            thermostatnoun = 'thermostat'
+            lightnoun = 'light'
         print(what,temperaturenoun,temperaturenoun2)
         if what == temperaturenoun or temperaturenoun2: what = thermostatnoun
         print(what,where)

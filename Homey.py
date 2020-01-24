@@ -215,6 +215,7 @@ class Homey:
             data = self.findall(what)
         else:
             data = self.findnode(what, where)
+        print("data="+data)
         if len(data) == 0: return None #node not found
         for node in data:
             result = None

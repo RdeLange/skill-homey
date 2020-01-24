@@ -274,6 +274,7 @@ class Homey:
             degreesnoun = 'graden'
             percentnoun = 'procent'
         #TEMPERATURE
+        print(what,temperaturenoun,temperaturenoun2)
         if wht.search(temperaturenoun) or wht.search(temperaturenoun2):
             i=0
             while i < len(devices['Devices'][0]['Nodes']):

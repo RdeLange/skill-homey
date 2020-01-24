@@ -27,6 +27,7 @@ class Homey:
         devices = self.ha.getdevicesjson()
         i=0
         while i < len(devices['Devices'][0]['Nodes']):
+            print(devices['Devices'][0]['Nodes'][i]['Name'])
             if whr.search(devices['Devices'][0]['Nodes'][i]['Name']) and wht.search(devices['Devices'][0]['Nodes'][i]['Name']):
                 sname = devices['Devices'][0]['Nodes'][i]['Name']
                 stype = devices['Devices'][0]['Nodes'][i]['Type']

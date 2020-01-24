@@ -208,8 +208,9 @@ class Homey:
             allnoun = 'alle'
             onnoun = 'aan'
             offnoun = 'uit'
-
+        print(what,temperaturenoun,temperaturenoun2)
         if what == temperaturenoun or temperaturenoun2: what = "thermostat"
+        print(what)
         if where == allnoun:
             data = self.findall(what)
         else:

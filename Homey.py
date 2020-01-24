@@ -23,6 +23,7 @@ class Homey:
         #===START===>
         wht = re.compile(what, re.I)
         whr = re.compile(where, re.I)
+        print(whr,wht)
         result = []
         devices = self.ha.getdevicesjson()
         i=0

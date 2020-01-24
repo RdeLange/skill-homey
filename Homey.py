@@ -44,7 +44,10 @@ class Homey:
         #input => what = what
         #output => [nodename, stype, properties] or None if nothing found
         #===START===>
-        what = what[:len(what)-1]
+        if self.lang == 'nl-nl':
+            if what[-2:] == "en" : what = what[:len(what)-2]
+            if what[-1:] == "s": what = what[:len(what) - 1]
+        else :what = what[:len(what)-1]
         wht = re.compile(what, re.I)
         result = []
         devices = self.ha.getdevicesjson()

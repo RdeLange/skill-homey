@@ -207,6 +207,7 @@ class Homey:
         onnoun = 'on'
         offnoun = 'off'
         thermostatnoun = 'thermostat'
+        thermostatnoun2 = 'termostaat'
         lightnoun = 'light'
 
         if self.lang == 'nl-nl':
@@ -216,9 +217,10 @@ class Homey:
             onnoun = 'aan'
             offnoun = 'uit'
             thermostatnoun = 'thermostat'
+            thermostatnoun2 = 'termostaat'
             lightnoun = 'light'
         print(what,temperaturenoun,temperaturenoun2)
-        if what == temperaturenoun or what == temperaturenoun2: what = thermostatnoun
+        if what == temperaturenoun or what == temperaturenoun2: what = thermostatnoun2
         print(what,where)
         if where == allnoun:
             data = self.findall(what)

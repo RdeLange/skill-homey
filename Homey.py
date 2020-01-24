@@ -197,17 +197,19 @@ class Homey:
         if not self.ha.check_mqttconnection(): return False
         result = None
         temperaturenoun = 'temperature'
+        temperaturenoun2 = 'heating'
         allnoun = 'all'
         onnoun = 'on'
         offnoun = 'off'
 
         if self.lang == 'nl-nl':
             temperaturenoun = 'temperatuur'
+            temperaturenoun2 = 'verwarming'
             allnoun = 'alle'
             onnoun = 'aan'
             offnoun = 'uit'
 
-        if what == temperaturenoun: what = "thermostat"
+        if what == temperaturenoun or temperaturenoun2: what = "thermostat"
         if where == allnoun:
             data = self.findall(what)
         else:
@@ -260,17 +262,19 @@ class Homey:
         devices = self.ha.getdevicesjson()
         wht = re.compile(what, re.I)
         whr = re.compile(where, re.I)
-        temperaturenoun = 'Temperature'
-        humiditynoun = 'Humidity'
-        degreesnoun = 'Degrees'
-        percentnoun = 'Percent'
+        temperaturenoun = 'temperature'
+        temperaturenoun2 = 'heating'
+        humiditynoun = 'humidity'
+        degreesnoun = 'degrees'
+        percentnoun = 'percent'
         if self.lang == 'nl-nl':
-            temperaturenoun = 'Temperatuur'
-            humiditynoun = 'Luchtvochtigheid'
-            degreesnoun = 'Graden'
-            percentnoun = 'Procent'
+            temperaturenoun = 'temperatuur'
+            temperaturenoun2 = 'verwarming'
+            humiditynoun = 'luchtvochtigheid'
+            degreesnoun = 'graden'
+            percentnoun = 'procent'
         #TEMPERATURE
-        if wht.search(temperaturenoun):
+        if wht.search(temperaturenoun) or wht.search(temperaturenoun2):
             i=0
             while i < len(devices['Devices'][0]['Nodes']):
                 if whr.search(devices['Devices'][0]['Nodes'][i]['Name']):

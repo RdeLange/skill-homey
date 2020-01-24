@@ -130,6 +130,11 @@ class HomeySkill(MycroftSkill):
                 sentencedata['measurement'] = item_d[2]
                 sentencedata['value'] = item_d[3]
                 sentencedata['unit'] = item_d[4]
+                if self.homey.lang == "nl-nl":
+                    if sentencedata['what'] == "current temperature" : sentencedata['what'] = "huidige temperatuur"
+                    if sentencedata['what'] == "target temperature": sentencedata['what'] = "ingestelde temperatuur"
+                    if sentencedata['what'] == "current humidity": sentencedata['what'] = "huidige luchtvochtigheid"
+
                 if count ==1: self.speak_dialog("SensorRead1",sentencedata)
                 elif count == len(dd) and len(dd) > 1:
                     self.speak_dialog("SensorRead2",sentencedata)

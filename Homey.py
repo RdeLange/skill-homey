@@ -23,12 +23,10 @@ class Homey:
         #===START===>
         wht = re.compile(what, re.I)
         whr = re.compile(where, re.I)
-        print(whr,wht)
         result = []
         devices = self.ha.getdevicesjson()
         i=0
         while i < len(devices['Devices'][0]['Nodes']):
-            print(devices['Devices'][0]['Nodes'][i]['Name'])
             if whr.search(devices['Devices'][0]['Nodes'][i]['Name']) and wht.search(devices['Devices'][0]['Nodes'][i]['Name']):
                 sname = devices['Devices'][0]['Nodes'][i]['Name']
                 stype = devices['Devices'][0]['Nodes'][i]['Type']
@@ -47,7 +45,6 @@ class Homey:
         #output => [nodename, stype, properties] or None if nothing found
         #===START===>
         what = what[:len(what)-1]
-        print(what)
         wht = re.compile(what, re.I)
         result = []
         devices = self.ha.getdevicesjson()
@@ -104,7 +101,6 @@ class Homey:
             lightnoun ='light'
         if type == re.compile(thermostatnoun, re.IGNORECASE):
             dsrdst = str(actionamount).title()
-            print(dsrdst)
             act = str(action).title()
             if dsrdst == "None":
                 dsrdst = "0"
@@ -114,8 +110,6 @@ class Homey:
                 temperature = properties['target-temperature'] #validate if correct => expect error
             except:
                 temperature = 16
-            print(temperature)
-
             if dsrdst.find(degreesnoun) > -1:
                 dsrdst = int(dsrdst[0:2])
             elif dsrdst.find(degreenoun) > -1:
@@ -219,14 +213,11 @@ class Homey:
             thermostatnoun = 'thermostat'
             thermostatnoun2 = 'thermostaat'
             lightnoun = 'light'
-        print(what,temperaturenoun,temperaturenoun2)
-        #if what == temperaturenoun or what == temperaturenoun2: what = thermostatnoun2
-        print(what,where)
+        if what == temperaturenoun or what == temperaturenoun2: what = thermostatnoun2
         if where == allnoun:
             data = self.findall(what)
         else:
             data = self.findnode(what, where)
-        print("data="+str(data))
         if len(data) == 0: return None #node not found
         for node in data:
             result = None
@@ -234,7 +225,6 @@ class Homey:
             nodename = node[1]
             nodetype = node[2]
             nodeproperties = node[3]
-            print(nodetype)
             if nodetype == re.compile(lightnoun, re.IGNORECASE):
                 targetstate_onoff = ""
                 if actionstate == onnoun: targetstate_onoff = "true"
@@ -287,7 +277,6 @@ class Homey:
             degreesnoun = 'graden'
             percentnoun = 'procent'
         #TEMPERATURE
-        print(what,temperaturenoun,temperaturenoun2)
         if wht.search(temperaturenoun) or wht.search(temperaturenoun2):
             i=0
             while i < len(devices['Devices'][0]['Nodes']):
